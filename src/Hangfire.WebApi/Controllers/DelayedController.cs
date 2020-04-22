@@ -14,38 +14,50 @@ namespace Hangfire.WebApi.Controllers
 
         // POST: api/Delayed
         [HttpPost]
-        public IActionResult Post([FromBody] double value)
+        public IActionResult Post()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Schedule(() => null, TimeSpan.FromSeconds(value));
+            double value = 15;
+            BackgroundJob.Schedule(() => MethodCalling(), TimeSpan.FromSeconds(value));
 
             return Created("CREATED DATA", null);
         }
 
         // PUT: api/Delayed/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] double value)
+        [HttpPut]
+        public IActionResult Put()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Schedule(() => null, TimeSpan.FromSeconds(value));
+            double value = 15;
+            BackgroundJob.Schedule(() => MethodCalling(), TimeSpan.FromSeconds(value));
 
             return Created("CREATED DATA", null);
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(double value)
+        [HttpDelete]
+        public IActionResult Delete()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Schedule(() => null, TimeSpan.FromSeconds(value));
+            double value = 15;
+            BackgroundJob.Schedule(() => MethodCalling(), TimeSpan.FromSeconds(value));
 
-            return Created("CREATED DATA", null);
+            return Delete();
+        }
+
+        public void MethodCalling()
+        {
+            //do something
+            for (int i = 0; i < 1000; i++)
+            {
+                i++;
+            }
         }
     }
 }

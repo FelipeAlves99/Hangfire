@@ -12,40 +12,57 @@ namespace Hangfire.WebApi.Controllers
     [ApiController]
     public class FireForgetController : ControllerBase
     {
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("working fine");
+        }
+
         // POST: api/FireForget
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        public IActionResult Post()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Enqueue(() => null);
+            BackgroundJob.Enqueue(() => MethodCalling());
 
             return Created("CREATED DATA", null);
         }
 
         // PUT: api/FireForget/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string value)
+        [HttpPut]
+        public IActionResult Put()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Enqueue(() => null);
+            BackgroundJob.Enqueue(() => MethodCalling());
 
             return Ok("UPDATED DATA");
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete]
+        public IActionResult Delete()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            BackgroundJob.Enqueue(() => null);
+            BackgroundJob.Enqueue(() => MethodCalling());
 
-            return Delete(1);
+            return Delete();
         }
+
+        public void MethodCalling()
+        {
+            //do something
+            for (int i = 0; i < 1000; i++)
+            {
+                i++;
+            }
+        }
+
+
     }
 }

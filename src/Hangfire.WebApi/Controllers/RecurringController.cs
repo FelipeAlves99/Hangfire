@@ -10,36 +10,49 @@ namespace Hangfire.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class RecurringController : ControllerBase
-    {        
-        // POST: api/Recurring
-        [HttpPost]
-        public IActionResult Post([FromBody] string value)
+    {
+        // POST: api/Recurring/trigger
+        [HttpGet("trigger")]
+        public IActionResult GetTrigger()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            string jobID = "1";
-            RecurringJob.AddOrUpdate(jobID, () => null, Cron.Minutely);
+            string jobID = "2";
+            RecurringJob.Trigger(jobID);
+
+            return Ok("Triggered job " + jobID);
+        }
+
+        // POST: api/Recurring
+        [HttpPost]
+        public IActionResult Post()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            string jobID = "2";
+            RecurringJob.AddOrUpdate(jobID, () => MethodCalling(), Cron.Hourly);
 
             return Created("CREATED DATA", null);
         }
 
         // PUT: api/Recurring/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string value)
+        [HttpPut]
+        public IActionResult Put()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             string jobID = "1";
-            RecurringJob.AddOrUpdate(jobID, () => null, Cron.Minutely);
+            RecurringJob.AddOrUpdate(jobID, () => MethodCalling(), Cron.Minutely);
 
-            return Created("CREATED DATA", null);
+            return Ok();
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete()]
+        public IActionResult Delete()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,7 +60,16 @@ namespace Hangfire.WebApi.Controllers
             string jobID = "1";
             RecurringJob.RemoveIfExists(jobID);
 
-            return Created("CREATED DATA", null);
-        }        
+            return Delete();
+        }
+       
+        public void MethodCalling()
+        {
+            //do something
+            for (int i = 0; i < 1000; i++)
+            {
+                i++;
+            }
+        }
     }
 }
